@@ -25,9 +25,11 @@ import { DocItem, ZHQ } from "zhq";
 
 export function Chatbot({
   docItems,
+  options,
   zhqRef,
 }: {
   docItems: DocItem[];
+  options: { topKCandidates: number; threshold: number };
   zhqRef: RefObject<ZHQ | null>;
 }) {
   const [input, setInput] = useState("");
@@ -35,9 +37,11 @@ export function Chatbot({
   const [suggestions, setSuggestions] = useState<string[]>([]);
   useEffect(() => {
     queueMicrotask(() =>
-      setSuggestions(docItems.slice(0, 3).map((d) => d.key)),
+      setSuggestions(
+        docItems.slice(0, options.topKCandidates).map((d) => d.key),
+      ),
     );
-  }, [docItems]);
+  }, [docItems, options.topKCandidates]);
 
   const [messages, setMessages] = useState<{ value: string; name: string }[]>([
     { value: "哈囉！請問您想要問些什麼？", name: "Assistant" },
@@ -51,7 +55,8 @@ export function Chatbot({
     setInput("");
 
     const { bestMatch, candidates } = zhqRef.current.query(input, {
-      threshold: 0.5,
+      threshold: options.threshold / 100,
+      topKCandidates: options.topKCandidates,
     });
     if (bestMatch) {
       setMessages((p) => [
@@ -78,7 +83,7 @@ export function Chatbot({
   };
 
   return (
-    <div className="absolute bottom-full right-0 w-96 h-[600px] pb-6 shadow-2xl">
+    <div className="absolute bottom-full right-0 max-w-[90vw] w-96 h-[600px] mb-3 shadow-2xl">
       <Card className="size-full py-0">
         {/* Messages */}
         <Conversation
@@ -101,9 +106,9 @@ export function Chatbot({
                   </Message>
                   <Suggestions className="ml-10">
                     {isLast &&
-                      suggestions.map((suggestion) => (
+                      suggestions.map((suggestion, index) => (
                         <Suggestion
-                          key={suggestion}
+                          key={index}
                           onClick={handleSuggestionClick}
                           suggestion={suggestion}
                         />
