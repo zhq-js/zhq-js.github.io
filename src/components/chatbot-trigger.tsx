@@ -7,7 +7,7 @@ export function ChatbotTrigger({
   return (
     <Button
       variant={"secondary"}
-      className="rounded-full size-20 shadow-[0_0_12px_-1px_var(--color-amber-400)] cursor-pointer"
+      className="rounded-full size-20  cursor-pointer"
       {...props}
     >
       🤖 問我
