@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Github, MousePointer2, Pointer, X } from "lucide-react";
+import { Github, Pointer, X } from "lucide-react";
 import Link from "next/link";
 import { Slider } from "@/components/ui/slider";
 

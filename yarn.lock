@@ -5281,10 +5281,10 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-zhq@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/zhq/-/zhq-1.0.0.tgz#922ad06b30ec7893aba00404b8dc1e9d3e30f12c"
-  integrity sha512-enNkrgkeNhq5rGcZzN376BUZVN+IT/5qVw81Ruc/HxrcPKmIDk/8EmBDTc78k5SKiaeeZPumyrGCb2/63XXjbg==
+zhq@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/zhq/-/zhq-1.0.1.tgz#281e4f381a6e1a9d83a78db4b28664de31dc97db"
+  integrity sha512-4jqJg4JqD0AG8CJRVykNmxyMsII4TBFcnlmGKUIl3+TFNRbHs+LT+p9R3VfI85S8FSvrvpixkNmt1AGR8faEhg==
 
 "zod-validation-error@^3.5.0 || ^4.0.0":
   version "4.0.2"
