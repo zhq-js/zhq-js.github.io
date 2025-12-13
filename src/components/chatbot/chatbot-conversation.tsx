@@ -12,6 +12,7 @@ import {
   Suggestion,
   Suggestions,
 } from "@/components/ui/shadcn-io/ai/suggestion";
+import { cn } from "@/lib/utils";
 
 export function ChatbotConversation({
   messages,
@@ -38,7 +39,13 @@ export function ChatbotConversation({
                 <MessageContent className="whitespace-pre-line">
                   {value}
                 </MessageContent>
-                <MessageAvatar name={name === "Me" ? "Me" : "🤖"} src={""} />
+                <MessageAvatar
+                  name={name === "Me" ? "Me" : "🤖"}
+                  src={""}
+                  className={cn(
+                    isLast && name === "Assistant" && "animate-bounce ",
+                  )}
+                />
               </Message>
               {isLast && (
                 <Suggestions className="flex h-8">

@@ -7,6 +7,7 @@ import {
   PromptInputToolbar,
   PromptInputTools,
 } from "@/components/ui/shadcn-io/ai/prompt-input";
+import TypingText from "@/components/ui/shadcn-io/typing-text";
 import { cn } from "@/lib/utils";
 import { RefObject, useEffect, useRef, useState } from "react";
 import { Document, QueryResult, ScoredDocument, ZHQ } from "zhq";
@@ -43,10 +44,11 @@ export function Chatbot({
   // --- query
   const query = (input: string): QueryResult | undefined => {
     if (!zhqRef.current) return;
-    return zhqRef.current.query(input, {
+    const result = zhqRef.current.query(input, {
       threshold: options.threshold / 100,
       topKCandidates: options.topKCandidates,
     });
+    return result;
   };
 
   // --- chat
@@ -82,6 +84,8 @@ export function Chatbot({
     setHint(undefined);
   };
 
+  const [showTyping, setShowTyping] = useState(true);
+
   return (
     <div className="bottom-full right-0 size-full shadow-2xl">
       <Card className="size-full py-0">
@@ -94,7 +98,7 @@ export function Chatbot({
         />
 
         {/* Input */}
-        <PromptInput onSubmit={handleSubmit}>
+        <PromptInput onSubmit={handleSubmit} className="relative">
           <PromptInputTextarea
             value={input}
             className={cn(input.trim() === "" && "animate-pulse")}
@@ -110,7 +114,7 @@ export function Chatbot({
                 setHint(bestMatch || candidates[0]);
               }
             }}
-            placeholder="請輸入訊息..."
+            placeholder=""
             onCompositionStart={() => (composingRef.current = true)}
             onCompositionEnd={() => (composingRef.current = false)}
             onKeyDown={(e) => {
@@ -120,7 +124,27 @@ export function Chatbot({
                 handleSubmit(e);
               }
             }}
+            onFocus={() => setShowTyping(false)}
+            onBlur={() => setShowTyping(input ? false : true)}
           />
+          {showTyping && (
+            <div className="absolute top-2 left-4">
+              <TypingText
+                text={[
+                  "請輸入訊息...",
+                  "例如：ZHQ是？",
+                  "也可以直接丟一句話試試看",
+                ]}
+                typingSpeed={75}
+                pauseDuration={1500}
+                showCursor={true}
+                cursorCharacter="|"
+                className="text-sm"
+                textColors={["#1e40af", "#1d4ed8", "#2563eb"]}
+                variableSpeed={{ min: 60, max: 160 }}
+              />
+            </div>
+          )}
           <PromptInputToolbar className="h-14">
             <PromptInputTools className="border-t border-black/4 flex-1 mr-2 pt-0.5 h-full">
               {hint && (
