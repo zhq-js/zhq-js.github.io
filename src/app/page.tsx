@@ -1,199 +1,86 @@
 "use client";
 
-import { Chatbot } from "@/components/chatbot";
-import { ChatbotTrigger } from "@/components/chatbot-trigger";
-import { Button } from "@/components/ui/button";
+import { Chatbot } from "@/components/chatbot/chatbot";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { Activity, FormEvent, useEffect, useRef, useState } from "react";
-import { createZhq, DocItem, ZHQ } from "zhq";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Github, Pointer, X } from "lucide-react";
-import Link from "next/link";
-import { Slider } from "@/components/ui/slider";
+import { useEffect, useRef, useState } from "react";
+import { createZhq, Document, ZHQ } from "zhq";
+import { Add } from "@/components/add";
+import { Header } from "@/components/header";
+import { ControlPanel } from "@/components/control-panel";
+import { DocumentsTable } from "@/components/documents-table";
+import { ChatbotTrigger } from "@/components/chatbot/chatbot-trigger";
+import { cn } from "@/lib/utils";
 
-const DEFAULT_DOC_ITEMS: DocItem[] = [
+const DOCUMENT: Document[] = [
   {
-    key: "ZHQ是什麼?",
+    text: "ZHQ是什麼?",
     content: "ZHQ 是一個完全運行於客戶端的中文檢索引擎",
   },
   {
-    key: "ZHQ如何索引文檔?",
-    content: "呼叫 buildIndex(docItems) 即可建立索引。",
+    text: "ZHQ如何索引文檔?",
+    content: "呼叫 buildIndex(documents) 即可建立索引。",
   },
-  { key: "ZHQ查詢方式?", content: "使用 query(text) 方法返回最相似的文檔。" },
   {
-    key: "ZHQ適合什麼場景?",
+    text: "ZHQ查詢方式?",
+    content: "使用 query(text) 方法返回最相似的文檔。",
+  },
+  {
+    text: "ZHQ適合什麼場景?",
     content: "ZHQ 適用於問答、搜尋、推薦、文本比對。",
   },
 ];
 
 export default function Home() {
-  const [isOpenChatBot, setIsOpenChatBot] = useState(false);
-
-  const [docItems, setDocItems] = useState<DocItem[]>(DEFAULT_DOC_ITEMS);
-  const [newDoc, setNewDoc] = useState({ key: "", content: "" });
+  const [documents, setDocuments] = useState<Document[]>(DOCUMENT);
   const [options, setOptions] = useState({ topKCandidates: 3, threshold: 60 });
-
   const zhqRef = useRef<ZHQ>(null);
-
   useEffect(() => {
-    (async () => (zhqRef.current = await createZhq(docItems)))();
+    (async () => (zhqRef.current = await createZhq(documents)))();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleAdd = (e: FormEvent) => {
-    e.preventDefault();
-    if (newDoc.key.trim() === "" || newDoc.content.trim() === "") return;
-    if (docItems.some((d) => d.key === newDoc.key)) return;
-    setDocItems((p) => [...p, newDoc]);
-    setNewDoc({ key: "", content: "" });
-  };
+  const [openChat, setOpenChat] = useState(false);
 
   return (
-    <div className="w-full h-full bg-primary pt-12 flex justify-center overflow-y-auto">
-      <div className="relative flex flex-col gap-12 items-center max-w-3xl w-[90vw]">
-        <div className="flex flex-col items-center text-primary-foreground gap-4">
-          <h1 className="w-fit text-4xl">ZHQ</h1>
-          <Link
-            href={"https://github.com/yiming-liao/zhq"}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:animate-spin"
-          >
-            <Github />
-          </Link>
-          <p className="text-primary-foreground/75 font-medium">
-            問答 Chatbot 範例
-          </p>
-        </div>
+    <div className="w-screen h-dvh bg-primary flex justify-center overflow-hidden">
+      <div className="relative flex flex-col items-center size-full">
+        {/* Header */}
+        <Header />
 
-        <div className="w-full flex max-md:flex-col gap-6 items-end">
-          <Card className="w-full">
-            <p className="mx-auto text-muted-foreground text-sm px-6">
-              新增或修改文檔後，重新開啟 Chatbot，ZHQ 就會自動重建索引。
-            </p>
-            <form onSubmit={handleAdd} className="flex flex-col gap-3 px-6">
-              <Input
-                placeholder="問題"
-                value={newDoc.key}
-                onChange={(e) =>
-                  setNewDoc((p) => ({ ...p, key: e.target.value }))
-                }
-              />
-              <Input
-                placeholder="回答"
-                value={newDoc.content}
-                onChange={(e) =>
-                  setNewDoc((p) => ({ ...p, content: e.target.value }))
-                }
-              />
-              <Button className="ml-auto">新增</Button>
-            </form>
-
+        <div className="max-w-7xl w-full flex lg:pb-12 px-6 h-[calc(100%-160px)] max-lg:h-[calc(100%-100px)] max-lg:pb-6">
+          {/* Left */}
+          <Card className="lg:max-w-3/5 flex-1 gap-0 p-0 h-full max-lg:w-full">
+            <Add
+              zhqRef={zhqRef}
+              documents={documents}
+              setDocuments={setDocuments}
+            />
             <Separator />
-
-            <div className="flex gap-6 px-6">
-              <div className="flex-1 flex flex-col gap-5">
-                <p className="text-muted-foreground text-sm">
-                  相似值：{options.threshold}
-                  （最相近的結果需要超過這個值才會回應）
-                </p>
-                <Slider
-                  value={[options.threshold]}
-                  onValueChange={(value) =>
-                    setOptions((p) => ({ ...p, threshold: value[0] }))
-                  }
-                />
-              </div>
-
-              <div className="flex-1 flex flex-col gap-1">
-                <p className="text-muted-foreground text-sm">
-                  最相似候選數量：{options.topKCandidates}
-                  （回傳幾個最相似的候選 / 建議）
-                </p>
-                <Input
-                  type="number"
-                  value={options.topKCandidates}
-                  min={0}
-                  onChange={(e) =>
-                    setOptions((p) => ({
-                      ...p,
-                      topKCandidates: Number(e.target.value),
-                    }))
-                  }
-                />
-              </div>
-            </div>
-
+            <ControlPanel
+              options={options}
+              setOptions={setOptions}
+              documents={documents}
+            />
             <Separator />
-
-            {/* List */}
-            <div className="flex flex-col gap-2 max-h-96 overflow-hidden px-6">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-20"></TableHead>
-                    <TableHead>問題</TableHead>
-                    <TableHead>回答</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {docItems.map(({ key, content }, index) => (
-                    <TableRow key={index}>
-                      <TableCell>
-                        <Button
-                          disabled={docItems.length === 1}
-                          size={"icon-sm"}
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setDocItems((p) =>
-                              p.filter((el) => el.key !== key),
-                            );
-                          }}
-                        >
-                          <X />
-                        </Button>
-                      </TableCell>
-                      <TableCell className="font-medium">{key}</TableCell>
-                      <TableCell>{content}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+            <DocumentsTable documents={documents} setDocuments={setDocuments} />
           </Card>
 
-          {/* Chat bot */}
-          <div className="relative flex items-center ">
-            <div className="absolute -bottom-12 left-1/2 -translate-x-1/2  text-white">
-              <Pointer className="opacity-75 size-5 animate-bounce" />
-            </div>
-            <div className="relative">
-              <Activity mode={isOpenChatBot ? "visible" : "hidden"}>
-                <Chatbot
-                  docItems={docItems}
-                  options={options}
-                  zhqRef={zhqRef}
-                />
-              </Activity>
-              <ChatbotTrigger
-                onClick={() => {
-                  if (!isOpenChatBot) {
-                    zhqRef.current?.buildIndex(docItems);
-                  }
-                  setIsOpenChatBot((p) => !p);
-                }}
-              />
-            </div>
+          {/* Right */}
+          <div
+            className={cn(
+              !openChat
+                ? "max-lg:opacity-0 max-lg:pointer-events-none max-lg:translate-y-24 max-lg:translate-x-8 max-lg:scale-75"
+                : "max-lg:opacity-100 max-lg:pointer-events-auto",
+              "max-lg:absolute max-lg:top-6 left-0 max-lg:w-full max-lg:px-6 max-lg:h-[calc(100dvh-24px)] max-lg:pb-24 duration-200",
+              "lg:max-w-2/5 flex-1 lg:relative flex items-center h-full pl-6",
+            )}
+          >
+            <Chatbot documents={documents} options={options} zhqRef={zhqRef} />
+          </div>
+
+          <div className="absolute bottom-4 right-4 lg:hidden shadow-[0_0_9px_3px_rgba(100,100,100,0.35)] rounded-full">
+            <ChatbotTrigger onClick={() => setOpenChat((p) => !p)} />
           </div>
         </div>
       </div>
