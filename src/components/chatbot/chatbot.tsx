@@ -133,6 +133,7 @@ export function Chatbot({
                 text={[
                   "請輸入訊息...",
                   "例如：ZHQ是？",
+                  "例如：場景？",
                   "也可以直接丟一句話試試看",
                 ]}
                 typingSpeed={75}
@@ -140,7 +141,7 @@ export function Chatbot({
                 showCursor={true}
                 cursorCharacter="|"
                 className="text-sm"
-                textColors={["#1e40af", "#1d4ed8", "#2563eb"]}
+                textColors={["#999", "#999", "#999"]}
                 variableSpeed={{ min: 60, max: 160 }}
               />
             </div>
