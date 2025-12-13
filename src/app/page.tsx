@@ -12,7 +12,7 @@ import { DocumentsTable } from "@/components/documents-table";
 import { ChatbotTrigger } from "@/components/chatbot/chatbot-trigger";
 import { cn } from "@/lib/utils";
 
-const DOCUMENT: Document[] = [
+const DOCUMENTS: Document[] = [
   {
     text: "ZHQ是什麼?",
     content: "ZHQ 是一個完全運行於客戶端的中文檢索引擎",
@@ -32,7 +32,7 @@ const DOCUMENT: Document[] = [
 ];
 
 export default function Home() {
-  const [documents, setDocuments] = useState<Document[]>(DOCUMENT);
+  const [documents, setDocuments] = useState<Document[]>(DOCUMENTS);
   const [options, setOptions] = useState({ topKCandidates: 3, threshold: 60 });
   const zhqRef = useRef<ZHQ>(null);
   useEffect(() => {

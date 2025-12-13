@@ -66,8 +66,7 @@ export function Add({
 
   return (
     <div className="flex flex-col px-6 gap-3 h-28 justify-center">
-      <div className="flex text-muted-foreground items-center gap-1">
-        <Separator className="max-w-9 ml-1 mr-2" />
+      <div className="flex text-muted-foreground items-center gap-1 border rounded-full py-1 px-3 w-fit bg-black/2">
         <FilePlus className="size-4" />
         <p className=" text-sm">新增</p>
       </div>

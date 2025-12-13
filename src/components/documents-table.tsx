@@ -13,7 +13,6 @@ import { Download, Files, Sparkles, X } from "lucide-react";
 import { Dispatch, SetStateAction } from "react";
 import { Document } from "zhq";
 import * as XLSX from "xlsx";
-import { Separator } from "@/components/ui/separator";
 
 export function DocumentsTable({
   documents,
@@ -33,9 +32,8 @@ export function DocumentsTable({
   }
 
   return (
-    <div className="flex flex-col gap-2 overflow-hidden px-6 h-[calc(100%-250px)]">
-      <div className="relative flex text-muted-foreground items-center gap-1 pt-4">
-        <Separator className="max-w-9 ml-1 mr-2" />
+    <div className="flex flex-col gap-2 overflow-hidden px-6 pt-4 h-[calc(100%-250px)]">
+      <div className="flex text-muted-foreground items-center gap-1 border rounded-full py-1 px-3 w-fit bg-black/2">
         <Files className="size-4" />
         <p className=" text-sm">文檔</p>
       </div>
@@ -71,14 +69,18 @@ export function DocumentsTable({
       </Table>
 
       <div className="flex text-muted-foreground mt-auto mx-auto py-4 mb-1 border-t w-full gap-3">
-        <Button size={"sm"} onClick={() => exportDocumentsToXlsx(documents)}>
+        <Button
+          onClick={() => exportDocumentsToXlsx(documents)}
+          className="px-8!"
+        >
           <Download />
           下載
         </Button>
         <p className="text-sm flex gap-1 items-center opacity-75 w-fit">
           <Sparkles className="size-3 animate-bounce" />
           <span className="line-clamp-1 flex-1">
-            您可以下載目前的 Excel 檔案(.xlsx)，並依照既有格式編輯後再重新上傳。
+            您可以下載目前文檔 Excel
+            檔案(.xlsx)，並依照既有格式編輯後再重新上傳。
           </span>
         </p>
       </div>

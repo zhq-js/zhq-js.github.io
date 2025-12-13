@@ -3,7 +3,6 @@ import { Dispatch, SetStateAction } from "react";
 import { Slider } from "@/components/ui/slider";
 import { SlidersVertical } from "lucide-react";
 import { Document } from "zhq";
-import { Separator } from "@/components/ui/separator";
 
 export function ControlPanel({
   documents,
@@ -18,8 +17,7 @@ export function ControlPanel({
 }) {
   return (
     <div className="flex flex-col justify-center gap-3 px-6 h-34 ">
-      <div className="flex text-muted-foreground items-center gap-1">
-        <Separator className="max-w-9 ml-1 mr-2" />
+      <div className="flex text-muted-foreground items-center gap-1 border rounded-full py-1 px-3 w-fit bg-black/2">
         <SlidersVertical className="size-4" />
         <p className=" text-sm">參數</p>
       </div>
