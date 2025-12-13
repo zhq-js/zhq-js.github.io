@@ -10,14 +10,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Download, Files, Sparkles, X } from "lucide-react";
-import { Dispatch, SetStateAction } from "react";
-import { Document } from "zhq";
+import { Dispatch, RefObject, SetStateAction } from "react";
+import { Document, ZHQ } from "zhq";
 import * as XLSX from "xlsx";
 
 export function DocumentsTable({
+  zhqRef,
   documents,
   setDocuments,
 }: {
+  zhqRef: RefObject<ZHQ | null>;
   documents: Document[];
   setDocuments: Dispatch<SetStateAction<Document[]>>;
 }) {
@@ -55,7 +57,11 @@ export function DocumentsTable({
                   size={"icon-sm"}
                   variant={"outline"}
                   onClick={() => {
-                    setDocuments((p) => p.filter((el) => el.text !== text));
+                    setDocuments((p) => {
+                      const newDocs = p.filter((el) => el.text !== text);
+                      zhqRef.current?.buildIndexAsync(newDocs); // build index
+                      return newDocs;
+                    });
                   }}
                 >
                   <X />

@@ -1,3 +1,4 @@
+import IndexProgress from "@/components/index-progress";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -14,10 +15,12 @@ import { Document, ZHQ } from "zhq";
 
 export function Add({
   zhqRef,
+  progress,
   documents,
   setDocuments,
 }: {
   zhqRef: RefObject<ZHQ | null>;
+  progress: number;
   documents: Document[];
   setDocuments: Dispatch<SetStateAction<Document[]>>;
 }) {
@@ -30,7 +33,7 @@ export function Add({
     if (documents.some((d) => d.text === newDoc.text)) return;
     setDocuments((p) => {
       const newDocs = [...p, newDoc];
-      zhqRef.current?.buildIndex(newDocs); // build index
+      zhqRef.current?.buildIndexAsync(newDocs); // build index
       return newDocs;
     });
     setNewDoc({ text: "", content: "" });
@@ -59,16 +62,21 @@ export function Add({
       );
     if (importedDocs.length > 0)
       setDocuments(() => {
-        zhqRef.current?.buildIndex(importedDocs); // build index
+        zhqRef.current?.buildIndexAsync(importedDocs); // build index
         return importedDocs;
       });
   }
 
   return (
     <div className="flex flex-col px-6 gap-3 h-28 justify-center">
-      <div className="flex text-muted-foreground items-center gap-1 border rounded-full py-1 px-3 w-fit bg-black/2">
-        <FilePlus className="size-4" />
-        <p className=" text-sm">新增</p>
+      <div className="flex gap-4 items-center">
+        <div className="flex text-muted-foreground items-center gap-1 border rounded-full py-1 px-3 w-fit bg-black/2">
+          <FilePlus className="size-4" />
+          <p className=" text-sm">新增</p>
+        </div>
+        <div>
+          <IndexProgress progress={progress} />
+        </div>
       </div>
       <div className="flex gap-3 items-center">
         <form onSubmit={handleAdd} className="flex gap-3 flex-1 max-lg:hidden">

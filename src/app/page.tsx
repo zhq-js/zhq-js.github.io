@@ -34,9 +34,16 @@ const DOCUMENTS: Document[] = [
 export default function Home() {
   const [documents, setDocuments] = useState<Document[]>(DOCUMENTS);
   const [options, setOptions] = useState({ topKCandidates: 3, threshold: 60 });
+  const [progress, setProgress] = useState(0);
   const zhqRef = useRef<ZHQ>(null);
   useEffect(() => {
-    (async () => (zhqRef.current = await createZhq(documents)))();
+    (async () => {
+      const zhq = await createZhq();
+      zhqRef.current = zhq;
+      zhq.onProgress = (p) => setProgress(Math.round(p * 100));
+      await zhq.initJieba();
+      zhq.buildIndexAsync(documents);
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -53,6 +60,7 @@ export default function Home() {
           <Card className="lg:max-w-3/5 flex-1 gap-0 p-0 h-full max-lg:w-full">
             <Add
               zhqRef={zhqRef}
+              progress={progress}
               documents={documents}
               setDocuments={setDocuments}
             />
@@ -63,7 +71,11 @@ export default function Home() {
               documents={documents}
             />
             <Separator />
-            <DocumentsTable documents={documents} setDocuments={setDocuments} />
+            <DocumentsTable
+              zhqRef={zhqRef}
+              documents={documents}
+              setDocuments={setDocuments}
+            />
           </Card>
 
           {/* Right */}
