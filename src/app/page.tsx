@@ -34,17 +34,14 @@ const DOCUMENTS: Document[] = [
 export default function Home() {
   const [documents, setDocuments] = useState<Document[]>(DOCUMENTS);
   const [options, setOptions] = useState({ topKCandidates: 3, threshold: 60 });
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState(100);
   const zhqRef = useRef<ZHQ>(null);
   useEffect(() => {
     (async () => {
-      const zhq = await createZhq();
+      const zhq = await createZhq(DOCUMENTS);
       zhqRef.current = zhq;
       zhq.onProgress = (p) => setProgress(Math.round(p * 100));
-      await zhq.initJieba();
-      zhq.buildIndexAsync(documents);
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [openChat, setOpenChat] = useState(false);
