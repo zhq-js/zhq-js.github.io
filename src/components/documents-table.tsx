@@ -27,7 +27,11 @@ export function DocumentsTable({
     documents: { text: string; content: string }[],
     filename = "zhq-documents.xlsx",
   ) {
-    const worksheet = XLSX.utils.json_to_sheet(documents);
+    const rows = documents.map((doc) => ({
+      問題: doc.text,
+      回答: doc.content,
+    }));
+    const worksheet = XLSX.utils.json_to_sheet(rows);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Documents");
     XLSX.writeFile(workbook, filename);
