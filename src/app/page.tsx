@@ -14,20 +14,21 @@ import { cn } from "@/lib/utils";
 
 const DOCUMENTS: Document[] = [
   {
-    text: "ZHQ是什麼?",
+    text: "ZHQ是什麼？",
     content: "ZHQ 是一個完全運行於客戶端的中文檢索引擎",
   },
   {
-    text: "ZHQ如何索引文檔?",
-    content: "呼叫 buildIndex(documents) 即可建立索引。",
+    text: "ZHQ適合什麼場景？",
+    content: "ZHQ 適用於問答、搜尋、內容推薦、文本比對。",
   },
   {
-    text: "ZHQ查詢方式?",
-    content: "使用 query(text) 方法返回最相似的文檔。",
+    text: "ZHQ的搜尋原理是什麼？",
+    content: "ZHQ 會先把文字用 Jieba 拆成詞，再用 BM25 算法找出最相關的內容。",
   },
   {
-    text: "ZHQ適合什麼場景?",
-    content: "ZHQ 適用於問答、搜尋、推薦、文本比對。",
+    text: "ZHQ會記錄我的搜尋內容嗎？",
+    content:
+      "本系統僅在瀏覽器中進行搜尋與比對，不會將您的搜尋內容上傳或儲存至伺服器。",
   },
 ];
 
